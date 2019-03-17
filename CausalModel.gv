@@ -2,38 +2,54 @@ digraph "causal model" {
 	H [label="Hoose", shape=box]
 	I [label="Inflow"]
 	Id [label="∂"]
+	Idv [shape=record label="{<f0>+|<f1>0|<f2>-}"]
 	Im [label="Mag"]
+	Imv [shape=record label="{<f0>0|<f1>+}"]
 
 	C [label="Container", shape=box]
 	V [label="Volume"]
 	Vd [label="∂"]
+	Vdv [shape=record label="{<f0>+|<f1>0|<f2>-}"]
 	Vm [label="Mag"]
+	Vmv [shape=record label="{<f0>0|<f1>+|<f2>max}"]
 
 	D [label="Drain", shape=box]
 	O [label="Outflow"]
 	Od [label="∂"]
+	Odv [shape=record label="{<f0>+|<f1>0|<f2>-}"]
 	Om [label="Mag"]
+	Omv [shape=record label="{<f0>0|<f1>+|<f2>max}"]
 
 	subgraph structure {
 		edge[dir=none]
 		H -> I
 		I -> Id
 		I -> Im
+		Id -> Idv
+		Im -> Imv
 
 		C -> V
 		V -> Vd
 		V -> Vm
+		Vd -> Vdv
+		Vm -> Vmv
+		
 
 		D -> O
 		O -> Od
 		O -> Om	
+		Od -> Odv
+		Om -> Omv
 	}
 
 	subgraph relations {
 		I -> V [label="I+"]
 		O -> V [label="I-"]
 		V -> O [label="P+"]
+		Vmv:f0 -> Omv:f0 [label="="]
+		Vmv:f2 -> Omv:f2 [label="="]
 	}
 
 	{ rank = same; V; I; O; }
+	{ rank = same; Idv; Imv; Vdv; Vmv; Odv; Omv; }
 }
