@@ -1,9 +1,13 @@
-from enum import Enum
+from enum import IntEnum
 
-class DValue(Enum):
+class DValue(IntEnum):
     MINUS = -1
     ZERO = 0
     PLUS = 1
+
+    @staticmethod
+    def increment(value):
+        return  min(value + 1, DValue.PLUS)
 
 class Derivative:
     def __init__(self, value):
@@ -13,7 +17,7 @@ class Derivative:
         return self.value == other.value
 
     def greater(self, other):
-        return int(self.value) > int(other.value)
+        return self.value > other.value
 
     def greaterEqual(self, other):
         return self.greater(other) or self.equals(other)
