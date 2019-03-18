@@ -5,6 +5,18 @@ class MValue(IntEnum):
     PLUS = 1
     MAX = 2
 
+    @staticmethod
+    def add(mvalue, delta):
+        return max(min(mvalue + delta, MValue.MAX), MValue.ZERO)
+    
+    @staticmethod
+    def isBound(mvalue):
+        return mvalue == MValue.ZERO or mvalue == MValue.MAX
+
+    @staticmethod
+    def isInterval(mvalue):
+        return mvalue == MValue.PLUS
+
 class Magnitude:
     def __init__(self, value):
         self.value = value

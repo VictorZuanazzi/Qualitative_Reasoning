@@ -11,8 +11,8 @@ def propotionalPositive(q1, q2):
 
 def influencePositive(q1, q2):
     if(q1.magnitude.greaterZero()):
-        q2.derivative.value = DValue.increment(q2.derivative.value)
+        q2.derivative.value = DValue.add(q2.derivative.value, 1)
 
 def influenceNegative(q1, q2):
     if(q1.magnitude.greaterZero()):
-        q2.derivative.value = DValue.decrement(q2.derivative.value)
+        q2.derivative.value = DValue.add(q2.derivative.value, -1)
