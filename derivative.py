@@ -7,7 +7,11 @@ class DValue(IntEnum):
 
     @staticmethod
     def increment(value):
-        return  min(value + 1, DValue.PLUS)
+        return min(value + 1, DValue.PLUS)
+
+    @staticmethod
+    def decrement(value):
+        return max(value - 1, DValue.MINUS)
 
 class Derivative:
     def __init__(self, value):

@@ -66,6 +66,38 @@ class TestRelationFunctions(unittest.TestCase):
 
         r.influencePositive(q1, q2)
         self.assertEqual(q2.derivative.value, DValue.PLUS)
+    
+    # I-
+    def test_i_minus_inactive(self):
+        q1 = Quantity(Magnitude(MValue.ZERO), None)
+        q2 = Quantity(None, Derivative(DValue.ZERO))
+
+        r.influenceNegative(q1, q2)
+        self.assertEqual(q2.derivative.value, DValue.ZERO)
+
+    def test_i_minus_active(self):
+        q1 = Quantity(Magnitude(MValue.PLUS), None)
+        q2 = Quantity(None, Derivative(DValue.ZERO))
+
+        r.influenceNegative(q1, q2)
+        self.assertEqual(q2.derivative.value, DValue.MINUS)
+
+    def test_i_minus_active_smooth(self):
+        q1 = Quantity(Magnitude(MValue.PLUS), None)
+        q2 = Quantity(None, Derivative(DValue.PLUS))
+
+        r.influenceNegative(q1, q2)
+        self.assertEqual(q2.derivative.value, DValue.ZERO)
+
+        r.influenceNegative(q1, q2)
+        self.assertEqual(q2.derivative.value, DValue.MINUS)
+
+    def test_i_minus_active_boundary(self):
+        q1 = Quantity(Magnitude(MValue.PLUS), None)
+        q2 = Quantity(None, Derivative(DValue.MINUS))
+
+        r.influenceNegative(q1, q2)
+        self.assertEqual(q2.derivative.value, DValue.MINUS)
 
 if __name__ == '__main__':
     unittest.main()
