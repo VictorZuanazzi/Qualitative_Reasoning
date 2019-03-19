@@ -4,7 +4,8 @@ def getFunc(key):
     return {
         "P+" : propotionalPositive,
         "I+" : influencePositive,
-    }
+        "I-" : influenceNegative,
+    }.get(key)
 
 def propotionalPositive(q1, q2):
     q2.derivative.value = q1.derivative.value
