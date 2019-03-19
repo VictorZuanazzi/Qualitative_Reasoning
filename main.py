@@ -1,6 +1,7 @@
 from quantity import Quantity
 from magnitude import Magnitude, MValue
 from derivative import Derivative, DValue
+from overgeneration import over_generate
 
 def main():
     state = {
@@ -13,6 +14,8 @@ def main():
         "Drain" : {
             "Outflow" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.ZERO))
         },
+        "pre_state": {},
+        "next_state": {},
     }
 
     relations = [
