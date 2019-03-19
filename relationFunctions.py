@@ -6,7 +6,7 @@ def getFunc(key, *args):
         "P+" : propotionalPositive,
         "I+" : influencePositive,
         "I-" : influenceNegative,
-        "VC" : partial(correspondence, args),
+        "VC" : partial(correspondence, value=args[0]),
     }.get(key)
 
 def propotionalPositive(q1, q2):
@@ -22,4 +22,4 @@ def influenceNegative(q1, q2):
 
 def correspondence(q1, q2, value):
     if q1.magnitude.value == value:
-            q2.magnitude.value = value
+        q2.magnitude.value = value

@@ -8,16 +8,31 @@ def main():
     relations = [
         {
             "type" : "I+",
+            "args" : None,
             "Q1" : ("Hoose", "Inflow"),
             "Q2" : ("Container", "Volume"),
         },
         {
             "type" : "I-",
+            "args" : None,
             "Q1" : ("Drain", "Outflow"),
             "Q2" : ("Container", "Volume"),
         },
         {
             "type" : "P+",
+            "args" : None,
+            "Q1" : ("Container", "Volume"),
+            "Q2" : ("Drain", "Outflow"),
+        },
+        {
+            "type" : "VC",
+            "args" : MValue.MAX,
+            "Q1" : ("Container", "Volume"),
+            "Q2" : ("Drain", "Outflow"),
+        },
+        {
+            "type" : "VC",
+            "args" : MValue.ZERO,
             "Q1" : ("Container", "Volume"),
             "Q2" : ("Drain", "Outflow"),
         }

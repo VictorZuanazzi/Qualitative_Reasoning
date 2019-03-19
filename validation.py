@@ -10,16 +10,17 @@ def getRelationQuantities(state, relation):
 def isStateValid(state, relations):
     isValid = True
 
+    # TODO fix rule interaction with same tail
     for rel in relations:
         # get implemetation for relation
-        func = getFunc(rel["type"])
+        func = getFunc(rel["type"], rel["args"])
         # get head and tail quantity
         head, tail = getRelationQuantities(state, rel)
         new_tail = tail.copy()
 
         # apply relation
         func(head, new_tail)
-        
+
         # check if state changed
         if not new_tail == tail:
             isValid = False
