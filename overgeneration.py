@@ -8,20 +8,9 @@ Created on Tue Mar 19 16:55:06 2019
 from quantity import Quantity
 from magnitude import Magnitude, MValue
 from derivative import Derivative, DValue
+from itertools import product
 
-
-def Q_exceptions(q, mags):
-    """Free space to hardcode shit.
-    Output: 
-        True if one of the exception cases is reached, False otherwise."""
-    
-    #exception 1: Inflow does not have a max quantity.
-    if q == "Inflow" and mags == 2:
-        return True
-    
-    return False
-
-def over_generate(state=None, mag_Enum=MValue, der_Enum=DValue, exception=Q_exceptions):
+def over_generate(blue_print=None, mag_Enum=MValue, der_Enum=DValue):
     """generates all combinations of states.
     Assumes that all quantities have the can take the same magnetude and 
     derivative values.
@@ -33,39 +22,55 @@ def over_generate(state=None, mag_Enum=MValue, der_Enum=DValue, exception=Q_exce
     """
     
     #defaut state in case no state is given.
-    if state == None:
-        state = {
+    if blue_print == None:
+        
+        mags = list(map(int, mag_Enum))
+        ders = list(map(int, der_Enum))
+        
+        blue_print = {
             "Hoose" : {
-                "Inflow" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.ZERO))
+                "Inflow" : ([0,1], ders)
             },
             "Container" : {
-                "Volume" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.ZERO))
+                "Volume" : (mags, ders)
             },
             "Drain" : {
-                "Outflow" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.ZERO))
+                "Outflow" : (mags, ders)
             },
         }
     
     #gets a list of possible values for magintude and derivatives
-    mags = list(map(int, mag_Enum))
-    ders = list(map(int, der_Enum))
+    
     
     #Creates all states
     states = []
+    t = []
     
-    for element in state:
-        for q in state[element]:
-            for m in mags:
-                for d in ders:
-                    
-                    #checks for exceptions
-                    if exception(q, mags):
-                        continue
-                    
-                    #generate a possibly impossible state.
-                    state[element][q] = Quantity(Magnitude(m), Derivative(d))
-                    
-                    #glue all states together in a beautiful list.
-                    states.append(state)
+    for e in blue_print:
+        for q in blue_print[e]:
+            t.append(blue_print[e][q][0])
+            t.append(blue_print[e][q][1])
+            
+    t = tuple(t)
+    combs = list(product(*t))
+    
+    for c in combs:
+        idx = 0
+        
+        state = {}
+        for e in blue_print:
+            state[e] = {}
+            for q in blue_print[e]:
+                
+                state[e][q] = Quantity(Magnitude(c[idx]), Derivative(c[idx+1]))
+                idx += 2
+                           
+        states.append(state)
     
     return states
+
+def main():
+    print(over_generate())
+
+if __name__ == "__main__":
+    main()
