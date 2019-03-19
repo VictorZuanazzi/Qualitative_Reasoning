@@ -6,7 +6,7 @@ def getFunc(key, *args):
         "P+" : propotionalPositive,
         "I+" : influencePositive,
         "I-" : influenceNegative,
-        "VC" : partial(correspondence, value=args[0]),
+        "VC" : partial(correspondence, args),
     }.get(key)
 
 def propotionalPositive(q1, q2):
