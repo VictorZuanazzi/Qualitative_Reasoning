@@ -18,6 +18,7 @@ class TestValidation(unittest.TestCase):
         }
         relation = {
             "type" : "P+",
+            "args" : None,
             "Q1" : ("Container", "Volume"),
             "Q2" : ("Drain", "Outflow"),
         }
@@ -44,6 +45,7 @@ class TestValidation(unittest.TestCase):
         relations = [
             {
                 "type" : "P+",
+                "args" : None,
                 "Q1" : ("Container", "Volume"),
                 "Q2" : ("Drain", "Outflow"),
             },
@@ -63,6 +65,7 @@ class TestValidation(unittest.TestCase):
         relations = [
             {
                 "type" : "P+",
+                "args" : None,
                 "Q1" : ("Container", "Volume"),
                 "Q2" : ("Drain", "Outflow"),
             },
@@ -82,11 +85,13 @@ class TestValidation(unittest.TestCase):
         relations = [
             {
                 "type" : "P+",
+                "args" : None,
                 "Q1" : ("Container", "Volume"),
                 "Q2" : ("Drain", "Outflow"),
             },
             {
                 "type" : "I-",
+                "args" : None,
                 "Q1" : ("Drain", "Outflow"),
                 "Q2" : ("Container", "Volume"),
             },
@@ -106,11 +111,13 @@ class TestValidation(unittest.TestCase):
         relations = [
             {
                 "type" : "P+",
+                "args" : None,
                 "Q1" : ("Container", "Volume"),
                 "Q2" : ("Drain", "Outflow"),
             },
             {
                 "type" : "I-",
+                "args" : None,
                 "Q1" : ("Drain", "Outflow"),
                 "Q2" : ("Container", "Volume"),
             },
