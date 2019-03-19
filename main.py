@@ -2,22 +2,9 @@ from quantity import Quantity
 from magnitude import Magnitude, MValue
 from derivative import Derivative, DValue
 from overgeneration import over_generate
+from validation import isStateValid
 
 def main():
-    state = {
-        "Hoose" : {
-            "Inflow" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.ZERO))
-        },
-        "Container" : {
-            "Volume" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.ZERO))
-        },
-        "Drain" : {
-            "Outflow" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.ZERO))
-        },
-        "pre_state": {},
-        "next_state": {},
-    }
-
     relations = [
         {
             "type" : "I+",
@@ -33,8 +20,16 @@ def main():
             "type" : "P+",
             "Q1" : ("Container", "Volume"),
             "Q2" : ("Drain", "Outflow"),
-        },
+        }
     ]
+
+    states = over_generate()
+    pruned_states = [s for s in states if isStateValid(s, relations)]
+    
+    print("States before:", len(states))
+    print("\n".join([str(s) for s in states]))
+    print("States after pruning:",len(pruned_states))
+    print("\n".join([str(s) for s in pruned_states]))
 
 if __name__ == "__main__":
     main()

@@ -99,5 +99,20 @@ class TestRelationFunctions(unittest.TestCase):
         r.influenceNegative(q1, q2)
         self.assertEqual(q2.derivative.value, DValue.MINUS)
 
+    def test_c_inactive(self):
+        q1 = Quantity(Magnitude(MValue.PLUS), None)
+        q2 = Quantity(Magnitude(MValue.PLUS), None)
+
+        r.getFunc("VC", MValue.MAX)(q1,q2)
+        self.assertEqual(q2.magnitude.value, MValue.PLUS)
+
+    def test_c_active(self):
+        q1 = Quantity(Magnitude(MValue.MAX), None)
+        q2 = Quantity(Magnitude(MValue.PLUS), None)
+
+        r.getFunc("VC", MValue.MAX)(q1,q2)
+        self.assertEqual(q2.magnitude.value, MValue.MAX)
+
+
 if __name__ == '__main__':
     unittest.main()
