@@ -19,6 +19,11 @@ class MValue(IntEnum):
 
 class Magnitude:
     def __init__(self, value):
+        
+        #if value is type int, it is converted to Enum.
+        if value is int:
+            value = MValue(value)
+        
         self.value = value
 
     def greaterZero(self):

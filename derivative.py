@@ -11,6 +11,11 @@ class DValue(IntEnum):
 
 class Derivative:
     def __init__(self, value):
+        
+        #if value is type int, it is converted to Enum.
+        if value is int:
+            value = DValue(value)
+        
         self.value = value
 
     def equals(self, other):
