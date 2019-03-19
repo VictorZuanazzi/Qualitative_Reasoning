@@ -15,10 +15,12 @@ def over_generate(blue_print=None, mag_Enum=MValue, der_Enum=DValue):
     Assumes that all quantities have the can take the same magnetude and 
     derivative values.
     Input:
-        state: dict(dict: Quantity(mag_Enum, der_Enum)) defining the state.
-        
+        blue_print: dict(dict: (list, list))) defining the state and the values it 
+        can take.
+        mag_Enum: IntEnum with the possible values for magntudes.
+        der_Enum: IntEnum with the possible values for derivatives.            
     Output:
-        list(state) all possible states.
+        list(states) all possible states.
     """
     
     #defaut state in case no state is given.
