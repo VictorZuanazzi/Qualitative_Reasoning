@@ -14,6 +14,12 @@ class Quantity:
         if isinstance(other, Quantity):
             return self.magnitude.value == other.magnitude.value and self.derivative.value == other.derivative.value
         return False
+    
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return f"[{self.magnitude.value},{self.derivative.value}]"
 
     @staticmethod
     def applyDerivative(orignal):
