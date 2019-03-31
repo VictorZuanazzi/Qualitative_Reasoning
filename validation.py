@@ -1,5 +1,4 @@
 from relationFunctions import getFunc
-from magnitude import MValue
 from derivative import DValue
 
 def getRelationQuantities(state, relation):
@@ -16,8 +15,8 @@ def isStateValid(state, relations):
     # check boundary cases
     for _, entity in state.items():
         for _, quantity in entity.items():
-            isValid &= not (quantity.magnitude.value == MValue.MAX and quantity.derivative.value == DValue.PLUS)
-            isValid &= not (quantity.magnitude.value == MValue.ZERO and quantity.derivative.value == DValue.MINUS)
+            isValid &= not (quantity.magnitude.isAtUpperBound() and quantity.derivative.value == DValue.PLUS)
+            isValid &= not (quantity.magnitude.isAtLowerBound() and quantity.derivative.value == DValue.MINUS)
 
     possibleDerivatives = {}
     magnitudes = {}

@@ -28,3 +28,9 @@ class Magnitude:
 
     def greaterZero(self):
         return self.value > MValue.ZERO
+
+    def isAtUpperBound(self):
+        return self.value == MValue.MAX
+
+    def isAtLowerBound(self):
+        return self.value == MValue.ZERO
