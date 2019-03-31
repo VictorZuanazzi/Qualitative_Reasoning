@@ -18,19 +18,20 @@ class MValue(IntEnum):
         return mvalue == MValue.PLUS
 
 class Magnitude:
-    def __init__(self, value):
+    def __init__(self, value, upperBound = MValue.MAX):
         
         #if value is type int, it is converted to Enum.
         if value is int:
             value = MValue(value)
         
         self.value = value
+        self.upperBound = upperBound
 
     def greaterZero(self):
         return self.value > MValue.ZERO
 
     def isAtUpperBound(self):
-        return self.value == MValue.MAX
+        return self.value == self.upperBound
 
     def isAtLowerBound(self):
         return self.value == MValue.ZERO

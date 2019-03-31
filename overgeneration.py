@@ -63,8 +63,8 @@ def over_generate(blue_print=None, mag_Enum=MValue, der_Enum=DValue):
         for e in blue_print:
             state[e] = {}
             for q in blue_print[e]:
-                
-                state[e][q] = Quantity(Magnitude(c[idx]), Derivative(c[idx+1]))
+                mag_bound = blue_print[e][q][0][-1]
+                state[e][q] = Quantity(Magnitude(c[idx], upperBound=mag_bound), Derivative(c[idx+1]))
                 idx += 2
                            
         states.append(state)
