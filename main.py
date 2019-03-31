@@ -35,7 +35,19 @@ def main():
             "args" : MValue.ZERO,
             "Q1" : ("Container", "Volume"),
             "Q2" : ("Drain", "Outflow"),
-        }
+        },
+        {
+            "type" : "VC",
+            "args" : MValue.MAX,
+            "Q1" : ("Drain", "Outflow"),
+            "Q2" : ("Container", "Volume"),
+        },
+        {
+            "type" : "VC",
+            "args" : MValue.ZERO,
+            "Q1" : ("Drain", "Outflow"),
+            "Q2" : ("Container", "Volume"),
+        },
     ]
 
     states = over_generate()
