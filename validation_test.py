@@ -179,5 +179,29 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(isStateValid(state, relations), False)
 
+    def test_isStateValid_upper_boundary_derivatives(self):
+        state_invalid = {
+            "A" : { "Q" : Quantity(Magnitude(MValue.MAX), Derivative(DValue.PLUS)) },
+        }
+        state_valid = {
+            "A" : { "Q" : Quantity(Magnitude(MValue.MAX), Derivative(DValue.MINUS)) },
+        }
+        relations = []
+
+        self.assertEqual(isStateValid(state_invalid, relations), False)
+        self.assertEqual(isStateValid(state_valid, relations), True)
+
+    def test_isStateValid_lower_boundary_derivatives(self):
+        state_invalid = {
+            "A" : { "Q" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.MINUS)) },
+        }
+        state_valid = {
+            "A" : { "Q" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.PLUS)) },
+        }
+        relations = []
+
+        self.assertEqual(isStateValid(state_invalid, relations), False)
+        self.assertEqual(isStateValid(state_valid, relations), True)
+
 if __name__ == '__main__':
     unittest.main()

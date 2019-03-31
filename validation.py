@@ -1,4 +1,6 @@
 from relationFunctions import getFunc
+from magnitude import MValue
+from derivative import DValue
 
 def getRelationQuantities(state, relation):
     entity1, quan1 = relation["Q1"]
@@ -11,7 +13,12 @@ def getRelationQuantities(state, relation):
 def isStateValid(state, relations):
     isValid = True
 
-    # TODO fix rule interaction with same tail
+    # check boundary cases
+    for _, entity in state.items():
+        for _, quantity in entity.items():
+            isValid &= not (quantity.magnitude.value == MValue.MAX and quantity.derivative.value == DValue.PLUS)
+            isValid &= not (quantity.magnitude.value == MValue.ZERO and quantity.derivative.value == DValue.MINUS)
+
     possibleDerivatives = {}
     magnitudes = {}
 
@@ -42,11 +49,11 @@ def isStateValid(state, relations):
         head, tail = getRelationQuantities(state, rel)
         # check if state changed to valid option
         if not tail.derivative.value in possibleDerivatives[rel["Q2"]]:
-            isValid = False
+            isValid &= False
             break
 
         if rel["Q2"] in magnitudes and magnitudes[rel["Q2"]] != tail.magnitude.value:
-            isValid = False
+            isValid &= False
             break
 
     return isValid
