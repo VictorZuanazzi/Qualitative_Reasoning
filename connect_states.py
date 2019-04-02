@@ -68,6 +68,34 @@ def add_directional_connection(prev_s, next_s):
     else:
         next_s["prev"] = {prev_s["id"]}
         
+
+def list_to_state(list_state, a_state):
+    """transforms a list with values correctly ordered for the state into the
+    state format.
+    Input:
+        list_state: (list(list(Quantities))) the list containing the
+            quantities information of the state.
+        a_state: (state format) serves as blue_print for the list_state. It 
+            copies the entities that do not carachterize a state, such as "id", 
+            "next" and "prev".
+    
+    """
+    #deepcopy does the job. 
+    c_state = deepcopy(a_state)
+    
+    count = 0
+    
+    for entity in c_state:
+        
+        #ignored values
+        if (entity == "id") | (entity == "prev") | (entity == "next"):
+            continue
+        
+        for q in c_state[entity]:
+            c_state[entity][q] = list_state[count]
+            count += 1
+            
+    return c_state
     
 
 def connect_states(unconnected_states):
