@@ -3,6 +3,7 @@ from magnitude import Magnitude, MValue
 from derivative import Derivative, DValue
 from overgeneration import over_generate
 from validation import isStateValid
+from connect_states import connect_states
 
 def main():
     relations = [
@@ -52,13 +53,13 @@ def main():
 
     states = over_generate()
     pruned_states = [s for s in states if isStateValid(s, relations)]
+    connected_states = connect_states(pruned_states)
     
+    #print("\n".join([str(s) for s in states]))
+    #print("States before:", len(states))
     
-    print("\n".join([str(s) for s in states]))
-    print("States before:", len(states))
-    
-    print("\n".join([str(s) for s in pruned_states]))
-    print("States after pruning:",len(pruned_states))
+    print("\n".join([str(s) for s in connected_states]))
+    print("States after pruning:",len(connected_states))
     
 if __name__ == "__main__":
     main()
