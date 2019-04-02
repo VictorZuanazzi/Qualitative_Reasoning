@@ -24,6 +24,7 @@ def isStateValid(state, relations):
     for rel in relations:
         # get implemetation for relation
         func = getFunc(rel["type"], rel["args"])
+        
         # get head and tail quantity
         head, tail = getRelationQuantities(state, rel)
         new_tail = tail.copy()
@@ -44,6 +45,7 @@ def isStateValid(state, relations):
             if len(possibleDerivatives[rel["Q2"]]) == 2 and possibleDerivatives[rel["Q2"]][0]== -1 * possibleDerivatives[rel["Q2"]][1]:
                 # add derivative = 0 for continuity
                 possibleDerivatives[rel["Q2"]].append(0)
+                
     for rel in relations:
         head, tail = getRelationQuantities(state, rel)
         # check if state changed to valid option
