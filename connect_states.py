@@ -173,7 +173,8 @@ def connect_states(unconnected_states):
         #external influences:
         
         #hardcoded because I want to be over with it.
-        #best way towards robust code is to specify the rules between the quantities.
+        #works because and despite some impossible states!
+        #best way towards robust code is to use the rules between the quantities.
         for s_2 in unconnected_states:
             
             #open tap
