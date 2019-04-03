@@ -123,6 +123,9 @@ def list_to_state(list_state, a_state):
             count += 1
             
     return c_state
+
+
+
     
 def connect_states(unconnected_states):
     """create phisically possible connection between states.
@@ -141,36 +144,35 @@ def connect_states(unconnected_states):
         
         #gets all the possibilities of transitions considering all quantities 
         #of entities.
-#        quantities = []
-#        for entity_1 in s_1.copy():
-#            
-#            if (entity_1 == "id") | (entity_1 == "prev") | (entity_1 == "next"):
-#                continue
-#            
-#            for q in s_1[entity_1]:       
-#                #!!! applyDerivative changes the upper bound of inflow !!!
-#                quantities.append(Quantity.applyDerivative(s_1[entity_1][q]))
-#          
-#        #get all combinations of possible next states.
-#        all_poss = list(product(*quantities))
-#        
-#        #compares all_possibilities of next states with the posssible next states.
-#        for maybe_next_state in all_poss:
-#            
-#            for s_2 in unconnected_states:
-#                
-#                #it is slow, but it works! (and I can spare that millisecond)
-#                new_s = list_to_state(maybe_next_state, s_2)
-#
-#                if new_s == s_2:
-#                    
-#                    #connects states
-#                    add_directional_connection(s_1, s_2) 
+        quantities = []
+        for entity_1 in s_1.copy():
+            
+            if (entity_1 == "id") | (entity_1 == "prev") | (entity_1 == "next"):
+                continue
+            
+            for q in s_1[entity_1]:       
+                #!!! applyDerivative changes the upper bound of inflow !!!
+                quantities.append(Quantity.applyDerivative(s_1[entity_1][q]))
+          
+        #get all combinations of possible next states.
+        all_poss = list(product(*quantities))
+        
+        #compares all_possibilities of next states with the posssible next states.
+        for maybe_next_state in all_poss:
+            
+            for s_2 in unconnected_states:
+                
+                #it is slow, but it works! (and I can spare that millisecond)
+                new_s = list_to_state(maybe_next_state, s_2)
+
+                if new_s == s_2:
+                    
+                    #connects states
+                    add_directional_connection(s_1, s_2) 
         
         #external influences:
         
         #hardcoded because I want to be over with it.
-        #it works, but there are some links to impossible states.
         #best way towards robust code is to specify the rules between the quantities.
         for s_2 in unconnected_states:
             
