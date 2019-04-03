@@ -4,6 +4,7 @@ from derivative import Derivative, DValue
 from overgeneration import over_generate
 from validation import isStateValid
 from connect_states import connect_states
+from graph_maker import make_state_graph
 
 def main():
     relations = [
@@ -60,6 +61,8 @@ def main():
     
     print("\n".join([str(s) for s in connected_states]))
     print("States after pruning:",len(connected_states))
+    
+    make_state_graph(connected_states, 'state_graph')
     
 if __name__ == "__main__":
     main()
