@@ -42,7 +42,7 @@ def state_copy(state):
 
     return c_s
         
-def add_directional_connection(prev_s, next_s):
+def add_directional_connection(prev_s, next_s, explanation = ""):
     """makes the directional connections between states.
     Inputs:
         prev_s: (dict state format) the previous state.
@@ -56,9 +56,9 @@ def add_directional_connection(prev_s, next_s):
     
     #add the id of the next state to the previous state.
     if prev_s.get("next"):
-        prev_s["next"].add(next_s["id"])
+        prev_s["next"][next_s["id"]] = explanation
     else:
-        prev_s["next"] = {next_s["id"]}
+        prev_s["next"] = {next_s["id"]: explanation}
         
     #add the id of the previous state to the next state.
     if next_s.get("prev"):
@@ -124,7 +124,20 @@ def list_to_state(list_state, a_state):
             
     return c_state
 
-
+def diff_of_states(state1, state2):
+    diffs = ""
+    
+    for entity in state1:
+        
+        #ignored values
+        if (entity == "id") | (entity == "prev") | (entity == "next"):
+            continue
+        
+        for q in state1[entity]:
+           if state1[entity][q] != state2[entity][q]:
+               diffs += str(q) + "\n"
+    
+    return diffs
 
     
 def connect_states(unconnected_states):
@@ -167,8 +180,11 @@ def connect_states(unconnected_states):
 
                 if new_s == s_2:
                     
+                    #get the explanation for the state
+                    explanation = diff_of_states(s_1, s_2)
+                    
                     #connects states
-                    add_directional_connection(s_1, s_2) 
+                    add_directional_connection(s_1, s_2, explanation) 
         
         #external influences:
         
@@ -188,7 +204,12 @@ def connect_states(unconnected_states):
                             
                             #if the rest of the state is the same
                             if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
-                                add_directional_connection(s_1, s_2) 
+                                
+                                #get the explanation for the state
+                                explanation = diff_of_states(s_1, s_2)
+                                
+                                #connect states
+                                add_directional_connection(s_1, s_2, explanation) 
             
             #close tap
             #if the tap is open
@@ -201,7 +222,12 @@ def connect_states(unconnected_states):
                             
                             #if the rest of the state is the same
                             if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
-                                add_directional_connection(s_1, s_2) 
+                                
+                                #get the explanation for the state
+                                explanation = diff_of_states(s_1, s_2)
+                                
+                                #connect states
+                                add_directional_connection(s_1, s_2, explanation) 
             
             
         

@@ -66,7 +66,7 @@ def make_state_graph(states, name="state_graph"):
         
         #perform all the edges
         for n_s in next_ss:
-            graph.add_edge(pydot.Edge(node[i], node[n_s]))
+            graph.add_edge(pydot.Edge(node[i], node[n_s], label=s["next"][n_s]))
     
     #saves the graph.
     graph.write_png(name+'.png')
