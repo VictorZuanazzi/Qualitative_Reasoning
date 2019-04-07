@@ -7,21 +7,7 @@ Created on Tue Apr  2 14:05:34 2019
 from quantity import Quantity
 from itertools import product
 from copy import deepcopy
-
-#not used yet to keep the data structure consistent.
-class State:  
-    def __init__(self, s_id, s_desc):
-        self.id =  s_id    
-        self.description = s_desc
-        self.previous = {}
-        self.next = {}
-    
-    def add_next_state(self, next_id):
-        self.previous.add(next_id)
-    
-    def add_previous_state(self, prev_id):
-        self.next.add(prev_id)
-        
+from validation import applyCausalMode
 
 def state_copy(state):
     """copy quantities of the state.
@@ -65,6 +51,13 @@ def add_directional_connection(prev_s, next_s, explanation = ""):
         next_s["prev"].add(prev_s["id"])
     else:
         next_s["prev"] = {prev_s["id"]}
+
+def eq(s1, s2):
+    result = True
+    for eKey, e in s1.items():
+        for qKey, q in e.items():
+            result &= s2[eKey][qKey] == q
+    return result
 
 def compare_states_except(state_1, state_2, exc_quantity = "Inflow"):
     """compare if the quantities of the states are the same except for the
@@ -140,7 +133,7 @@ def diff_of_states(state1, state2):
     return diffs
 
     
-def connect_states(unconnected_states):
+def connect_states(unconnected_states, relations):
     """create phisically possible connection between states.
     NOT FULLU WORKING YET"""
     
@@ -171,17 +164,19 @@ def connect_states(unconnected_states):
         all_poss = list(product(*quantities))
         
         #compares all_possibilities of next states with the posssible next states.
-        for maybe_next_state in all_poss:
-            
-            for s_2 in unconnected_states:
-                
-                #it is slow, but it works! (and I can spare that millisecond)
-                new_s = list_to_state(maybe_next_state, s_2)
-
-                if new_s == s_2:
-                    #connects states
-                    add_directional_connection(s_1, s_2, '∂') 
         
+
+        for maybe_next_state in all_poss:
+            s = list_to_state(maybe_next_state, s_1)
+            causalStates = applyCausalMode(s,relations)
+            for cs in causalStates:
+                for s_2 in unconnected_states:
+                    
+                    #it is slow, but it works! (and I can spare that millisecond)
+                    if eq(cs, s_2):
+                        #connects states
+                        add_directional_connection(s_1, s_2, '∂') 
+            
         #external influences:
         
         #hardcoded because I want to be over with it.
@@ -216,13 +211,15 @@ def connect_states(unconnected_states):
                             if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
                                 #connect states
                                 add_directional_connection(s_1, s_2, 'exo') 
-            
-            
-        
-        
-        
-        
-        
+
+    # add_directional_connection(unconnected_states[3], unconnected_states[12],"hand")
+    # add_directional_connection(unconnected_states[4], unconnected_states[15],"hand")
+    # add_directional_connection(unconnected_states[4], unconnected_states[13],"hand")
+    # add_directional_connection(unconnected_states[4], unconnected_states[14],"hand")
+    # add_directional_connection(unconnected_states[5], unconnected_states[16],"hand")
+    # add_directional_connection(unconnected_states[5], unconnected_states[17],"hand")
+    # add_directional_connection(unconnected_states[11], unconnected_states[2],"hand")
+    # add_directional_connection(unconnected_states[8], unconnected_states[1],"hand")
     return unconnected_states
         
         
