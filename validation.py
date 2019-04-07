@@ -8,6 +8,25 @@ def getRelationQuantities(state, relation):
     tail = state[entity2][quan2]
     return head, tail
 
+def state_copy(state):
+    """copy quantities of the state.
+    Not entities that have no quantity are ignored.
+    """
+    c_s = {}
+    
+    for entity in state:
+        
+        if (entity == "id") | (entity == "prev") | (entity == "next"):
+            #c_s[entity] = state[entity].copy()
+            continue
+        
+        c_s[entity] = {}
+        
+        for q in state[entity]:
+            c_s[entity][q] = state[entity][q].copy()
+
+    return c_s
+
 def checkExogenous(state, relations):
     derivatives = {}
     magnitudes = {}
@@ -66,8 +85,13 @@ def isStateValid(state, relations):
             isValid &= not (q.magnitude.isAtLowerBound() and q.derivative.value == DValue.MINUS)
 
     magnitudes, derivatives = checkExogenous(state, relations)
-    magnitudes, possibleDerivatives = applyCausalMode(state, relations, magnitudes)
-    
+
+    copy = state_copy(state)
+    for key, value in derivatives.items():
+        copy[key[0]][key[1]].derivative.value = value
+
+    magnitudes, possibleDerivatives = applyCausalMode(copy, relations, magnitudes)
+
     # check if state changed to valid option
     for eKey, e in state.items():
         for qKey, q in e.items():
@@ -76,7 +100,7 @@ def isStateValid(state, relations):
                 if not q.derivative.value in possibleDerivatives[key]:
                     isValid &= False
                     break
-            elif not q.derivative.value  is derivatives[key]:
+            elif not q.derivative.value is derivatives[key]:
                 isValid &= False
                 break
 
