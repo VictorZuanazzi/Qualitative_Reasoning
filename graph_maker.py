@@ -24,11 +24,10 @@ def state_to_string(state):
             continue
         
         #new line for entity
-        description += " \n" + str(entity) + ":"
         
         for q in state[entity]:
             #new line for each quantity
-            description += "\n" + str(q) + ": " + str(state[entity][q])
+            description += "\n" + str(q[0:1]) + ": " + str(state[entity][q])
             
     return description
 

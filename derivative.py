@@ -30,3 +30,13 @@ class Derivative:
     def greaterZero(self):
         return self.greater(Derivative(DValue.ZERO))
 
+    def __repr__(self):
+        return self.__str__()
+
+    def __str__(self):
+        return {
+            -1 : "-",
+            0 : "0",
+            1 : "+",
+        }.get(self.value)
+
