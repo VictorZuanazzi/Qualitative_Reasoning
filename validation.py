@@ -109,3 +109,6 @@ def isStateValid(state, relations):
                 break
 
     return isValid
+
+def pruneImpossibleStates(states, relations):
+    return [s for s in states if isStateValid(s, relations)]
