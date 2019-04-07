@@ -9,6 +9,7 @@ from itertools import product
 from copy import deepcopy
 from magnitude import Magnitude, MValue
 from derivative import Derivative, DValue
+from validation import applyCausalModel
 
 
 #not used yet to keep the data structure consistent.
@@ -159,37 +160,37 @@ def derivate_all_q(state):
 
 def exogenous_change(state1, state2, exo_type=None, exo_q=("Hoose","Inflow")):
     exo_value = {"increase": 1, "decrease": -1}
-    #print("state1 \n", state1)
-    #print("state2 \n", state2)
+
     
     if exo_type == None:
-        if state1 == state2:
-            return True
+        return state1 == state2
+ 
     elif (exo_type == "increase") | (exo_type == "decrease"):
         #make a copy of the state
         s_1 = deepcopy(state1)
         
-        #increment the derivavite
+        #increment / decrement the derivavite
         s_1[exo_q[0]][exo_q[1]].derivative.value = DValue.add(s_1[exo_q[0]][exo_q[1]].derivative.value, exo_value[exo_type])
         
-        #print("s_1 exo \n",s_1)
         #aplly derivative in all quantities
         all_poss = derivate_all_q(s_1)
+        
+        #hopefully we will implement this:
+#        all_poss = applyCausalModel(s_1, relations)
        
         #compares all_possibilities of next states with the posssible next states.
         for maybe_next_state in all_poss:
             #it is slow, but it works! (and I can spare that millisecond)
             new_s = list_to_state(maybe_next_state, state2)
-            return new_s == state2
+            if new_s == state2:
+                #Connection found
+                return True
+        #no transition found
+        return False
                     
     elif exo_type == "random":
         return exogenous_change(state1, state2, exo_type="decrease", exo_q=exo_q) | exogenous_change(state1, state2, exo_type="increase", exo_q=exo_q)
         
-        
-        
-    
-    
-    
     
 def connect_states(unconnected_states):
     """create phisically possible connection between states.
@@ -202,30 +203,24 @@ def connect_states(unconnected_states):
     #For each state, check if it is possible to transition to the other state.
     for s_1 in unconnected_states:
         
+        
+        #external influences:
+        for s_2 in unconnected_states:
+            
+            if exogenous_change(s_1, s_2, exo_type="random", exo_q=("Hoose","Inflow")):
+                #connect states
+                add_directional_connection(s_1, s_2, 'exo') 
+        
+        
         #obligatory transitions (effects of the derivatives):
-        #kinda working but there are some weird stuff, 
-        #commented to debug external influences
         
         #gets all the possibilities of transitions considering all quantities 
         #of entities.
-        quantities = []
-        for entity_1 in s_1.copy():
-            
-            if (entity_1 == "id") | (entity_1 == "prev") | (entity_1 == "next"):
-                continue
-            
-            for q in s_1[entity_1]:       
-                #!!! applyDerivative changes the upper bound of inflow !!!
-                quantities.append(Quantity.applyDerivative(s_1[entity_1][q]))
-          
-        #get all combinations of possible next states.
-        all_poss = list(product(*quantities))
+        all_poss = derivate_all_q(s_1)
         
         #compares all_possibilities of next states with the posssible next states.
-        for maybe_next_state in all_poss:
-            
+        for maybe_next_state in all_poss:       
             for s_2 in unconnected_states:
-                
                 #it is slow, but it works! (and I can spare that millisecond)
                 new_s = list_to_state(maybe_next_state, s_2)
 
@@ -233,21 +228,9 @@ def connect_states(unconnected_states):
                     #connects states
                     add_directional_connection(s_1, s_2, 'der') 
         
-        #external influences:
-        
-        #hardcoded because I want to be over with it.
-        #works because and despite some impossible states!
-        #best way towards robust code is to use the rules between the quantities.
-        for s_2 in unconnected_states:
-              
+       
             
-            if exogenous_change(s_1, s_2, exo_type="random", exo_q=("Hoose","Inflow")):
-                #connect states
-                add_directional_connection(s_1, s_2, 'exo') 
-                #print("state1 \n", s_1)
-                #print("state2 \n", s_2)
-            
-             #keep legacy code for future museums about bad code:
+#             #keep legacy code for future museums about bad code:
 #            #open tap
 #            #if the tap is closed
 #            if s_1["Hoose"]["Inflow"].magnitude.value == 0:
