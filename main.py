@@ -85,14 +85,16 @@ def main():
             "Drain" : {
                 "Outflow" : (mags, ders)
             },
-        }
+        }        
     
+    print("Overgenerating...")
     states = over_generate(blue_print=blue_print)
-    pruned_states = pruneImpossibleStates(states, relations) #[s for s in states if isStateValid(s, relations)]
-    connected_states = connect_states(pruned_states)
     
-    #print("\n".join([str(s) for s in states]))
-    #print("States before:", len(states))
+    print("Prunning...")
+    pruned_states = pruneImpossibleStates(states, relations) 
+    
+    print("Connecting states...")
+    connected_states = connect_states(pruned_states)
     
     print("\n".join([str(s) for s in connected_states]))
     print("States after pruning:",len(connected_states))
