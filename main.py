@@ -50,6 +50,12 @@ def main():
             "Q1" : ("Drain", "Outflow"),
             "Q2" : ("Container", "Volume"),
         },
+        {
+            "type" : "EX",
+            "args" : 1,
+            "Q1" : ("Hoose", "Inflow"),
+            "Q2" : ("Hoose", "Inflow"),
+        }
     ]
 
     states = over_generate()
