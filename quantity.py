@@ -7,7 +7,7 @@ class Quantity:
         self.derivative = derivative
 
     def copy(self):
-        return Quantity(Magnitude(self.magnitude.value), Derivative(self.derivative.value))
+        return Quantity(Magnitude(self.magnitude.value, self.magnitude.upperBound), Derivative(self.derivative.value))
 
     def __eq__(self, other):
         """Overrides the default implementation"""
@@ -26,7 +26,7 @@ class Quantity:
         copy = orignal.copy()
 
         copy.magnitude.value = MValue.add(copy.magnitude.value, 1 * copy.derivative.value)
-        if(MValue.isBound(copy.magnitude.value)):
+        if(copy.magnitude.isBound()):
             copy.derivative.value = DValue.ZERO
 
         if(MValue.isInterval(orignal.magnitude.value)):
