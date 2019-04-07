@@ -130,3 +130,6 @@ def isStateValid(state, relations):
     isValid &= state in causalStates
 
     return isValid
+
+def pruneInvalidStates(states, relations):
+     return [s for s in states if isStateValid(s, relations)]

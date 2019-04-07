@@ -2,7 +2,7 @@ from quantity import Quantity
 from magnitude import Magnitude, MValue
 from derivative import Derivative, DValue
 from overgeneration import over_generate
-from validation import isStateValid, pruneImpossibleStates
+from validation import isStateValid, pruneInvalidStates
 from connect_states import connect_states
 from graph_maker import make_state_graph
 
@@ -59,7 +59,8 @@ def main():
     ]
 
     states = over_generate()
-    pruned_states = [s for s in states if isStateValid(s, relations)]
+    ders = list(map(int, DValue))
+    pruned_states = pruneInvalidStates(states, relations) 
     connected_states = connect_states(pruned_states, relations)
     
     #print("\n".join([str(s) for s in states]))
