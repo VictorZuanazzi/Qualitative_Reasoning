@@ -56,16 +56,10 @@ def main():
             "Q1" : ("Drain", "Outflow"),
             "Q2" : ("Container", "Volume"),
         },
-        {
-            "type" : "EX",
-            "args" : 1,
-            "Q1" : ("Hoose", "Inflow"),
-            "Q2" : ("Hoose", "Inflow"),
-        }
     ]
 
     states = over_generate()
-    pruned_states = pruneImpossibleStates(states, relations)
+    pruned_states = [s for s in states if isStateValid(s, relations)]
     connected_states = connect_states(pruned_states, relations)
     
     #print("\n".join([str(s) for s in states]))
