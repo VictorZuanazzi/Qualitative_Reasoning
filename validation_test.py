@@ -235,7 +235,7 @@ class TestValidation(unittest.TestCase):
 
         self.assertEqual(isStateValid(state, relations), False)
 
-    def test_isStateValid_oneEX(self):
+    def test_isStateValid_otherEX(self):
         state = { 
             "A" : { "Q" : 
                 Quantity(Magnitude(MValue.ZERO), 
@@ -295,6 +295,43 @@ class TestValidation(unittest.TestCase):
             },
         ]
 
+        self.assertEqual(isStateValid(state, relations), False)
+
+    def test_isStateValid_relationOrder(self):
+        state = { 
+            "A" : { "Q" : 
+                Quantity(Magnitude(MValue.ZERO), 
+                Derivative(DValue.ZERO)) 
+            },
+            "B" : { "Q" : 
+                Quantity(Magnitude(MValue.PLUS), 
+                Derivative(DValue.MINUS)) 
+            },
+            "C" : { "Q" : 
+                Quantity(Magnitude(MValue.PLUS), 
+                Derivative(DValue.ZERO)) 
+            },
+        }
+        relations = [
+            {
+                "type" : "I+",
+                "args" : None,
+                "Q1" : ("A", "Q"),
+                "Q2" : ("B", "Q"),
+            },
+            {
+                "type" : "I-",
+                "args" : None,
+                "Q1" : ("C", "Q"),
+                "Q2" : ("B", "Q"),
+            },
+            {
+                "type" : "P+",
+                "args" : None,
+                "Q1" : ("B", "Q"),
+                "Q2" : ("C", "Q"),
+            },
+        ]
         self.assertEqual(isStateValid(state, relations), False)
 
 if __name__ == '__main__':
