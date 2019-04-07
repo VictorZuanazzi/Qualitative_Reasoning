@@ -80,10 +80,10 @@ class TestValidation(unittest.TestCase):
         }
         relations = [
             {
-                "type" : "P+",
+                "type" : "EX",
                 "args" : None,
                 "Q1" : ("B", "Q"),
-                "Q2" : ("C", "Q"),
+                "Q2" : ("B", "Q"),
             },
             {
                 "type" : "I-",
@@ -92,10 +92,10 @@ class TestValidation(unittest.TestCase):
                 "Q2" : ("B", "Q"),
             },
             {
-                "type" : "EX",
+                "type" : "P+",
                 "args" : None,
                 "Q1" : ("B", "Q"),
-                "Q2" : ("B", "Q"),
+                "Q2" : ("C", "Q"),
             },
         ]
 
@@ -153,16 +153,16 @@ class TestValidation(unittest.TestCase):
         }
         relations = [
             {
-                "type" : "P+",
-                "args" : None,
-                "Q1" : ("A", "Q"),
-                "Q2" : ("B", "Q"),
-            },
-            {
                 "type" : "I-",
                 "args" : None,
                 "Q1" : ("B", "Q"),
                 "Q2" : ("A", "Q"),
+            },
+            {
+                "type" : "P+",
+                "args" : None,
+                "Q1" : ("A", "Q"),
+                "Q2" : ("B", "Q"),
             },
         ]
 

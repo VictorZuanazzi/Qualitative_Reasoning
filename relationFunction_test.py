@@ -50,16 +50,6 @@ class TestRelationFunctions(unittest.TestCase):
         r.influencePositive(q1, q2)
         self.assertEqual(q2.derivative.value, DValue.PLUS)
 
-    def test_i_plus_active_smooth(self):
-        q1 = Quantity(Magnitude(MValue.PLUS), None)
-        q2 = Quantity(None, Derivative(DValue.MINUS))
-
-        r.influencePositive(q1, q2)
-        self.assertEqual(q2.derivative.value, DValue.ZERO)
-
-        r.influencePositive(q1, q2)
-        self.assertEqual(q2.derivative.value, DValue.PLUS)
-
     def test_i_plus_active_boundary(self):
         q1 = Quantity(Magnitude(MValue.PLUS), None)
         q2 = Quantity(None, Derivative(DValue.PLUS))
@@ -78,16 +68,6 @@ class TestRelationFunctions(unittest.TestCase):
     def test_i_minus_active(self):
         q1 = Quantity(Magnitude(MValue.PLUS), None)
         q2 = Quantity(None, Derivative(DValue.ZERO))
-
-        r.influenceNegative(q1, q2)
-        self.assertEqual(q2.derivative.value, DValue.MINUS)
-
-    def test_i_minus_active_smooth(self):
-        q1 = Quantity(Magnitude(MValue.PLUS), None)
-        q2 = Quantity(None, Derivative(DValue.PLUS))
-
-        r.influenceNegative(q1, q2)
-        self.assertEqual(q2.derivative.value, DValue.ZERO)
 
         r.influenceNegative(q1, q2)
         self.assertEqual(q2.derivative.value, DValue.MINUS)
