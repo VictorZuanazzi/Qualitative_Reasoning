@@ -20,22 +20,22 @@ def main():
             "Q1" : ("Drain", "Outflow"),
             "Q2" : ("Container", "Volume"),
         },
+        # {
+        #     "type" : "P+",
+        #     "args" : None,
+        #     "Q1" : ("Container", "Volume"),
+        #     "Q2" : ("Container", "Height"),
+        # },
+        # {
+        #     "type" : "P+",
+        #     "args" : None,
+        #     "Q1" : ("Container", "Height"),
+        #     "Q2" : ("Container", "Pressure"),
+        # },
         {
             "type" : "P+",
             "args" : None,
             "Q1" : ("Container", "Volume"),
-            "Q2" : ("Container", "Height"),
-        },
-        {
-            "type" : "P+",
-            "args" : None,
-            "Q1" : ("Container", "Height"),
-            "Q2" : ("Container", "Pressure"),
-        },
-        {
-            "type" : "P+",
-            "args" : None,
-            "Q1" : ("Container", "Pressure"),
             "Q2" : ("Drain", "Outflow"),
         },
         {
@@ -79,8 +79,8 @@ def main():
             },
             "Container" : {
                 "Volume" : (mags, ders),
-                "Height" : (mags, ders),
-                "Pressure" : (mags, ders),
+                # "Height" : (mags, ders),
+                # "Pressure" : (mags, ders),
             },
             "Drain" : {
                 "Outflow" : (mags, ders)
