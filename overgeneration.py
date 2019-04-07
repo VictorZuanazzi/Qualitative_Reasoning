@@ -23,7 +23,7 @@ def over_generate(blue_print=None, mag_Enum=MValue, der_Enum=DValue):
         list(states) all possible states.
     """
     
-    #defaut state in case no state is given.
+    #defaut state blueprint in case none is given.
     if blue_print == None:
         
         mags = list(map(int, mag_Enum))
@@ -40,8 +40,6 @@ def over_generate(blue_print=None, mag_Enum=MValue, der_Enum=DValue):
                 "Outflow" : (mags, ders)
             },
         }
-    
-    #gets a list of possible values for magintude and derivatives
     
     
     #Creates all states
