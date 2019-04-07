@@ -22,6 +22,8 @@ def isStateValid(state, relations):
     magnitudes = {}
 
     for rel in relations:
+        if(rel["type"] is "exogenous"):
+            continue
         # get implemetation for relation
         func = getFunc(rel["type"], rel["args"])
         
@@ -47,6 +49,8 @@ def isStateValid(state, relations):
                 possibleDerivatives[rel["Q2"]].append(0)
                 
     for rel in relations:
+        if(rel["type"] is "exogenous"):
+            continue
         head, tail = getRelationQuantities(state, rel)
         # check if state changed to valid option
         if not tail.derivative.value in possibleDerivatives[rel["Q2"]]:
