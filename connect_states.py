@@ -7,6 +7,9 @@ Created on Tue Apr  2 14:05:34 2019
 from quantity import Quantity
 from itertools import product
 from copy import deepcopy
+from magnitude import Magnitude, MValue
+from derivative import Derivative, DValue
+
 
 #not used yet to keep the data structure consistent.
 class State:  
@@ -139,10 +142,58 @@ def diff_of_states(state1, state2):
     
     return diffs
 
+def derivate_all_q(state):
+    quantities = []
+    for entity_1 in state.copy():
+        
+        if (entity_1 == "id") | (entity_1 == "prev") | (entity_1 == "next"):
+            continue
+        
+        for q in state[entity_1]:       
+            #!!! applyDerivative changes the upper bound of inflow !!!
+            quantities.append(Quantity.applyDerivative(state[entity_1][q]))
+      
+    #get all combinations of possible next states.
+    all_poss = list(product(*quantities))
+    return all_poss
+
+def exogenous_change(state1, state2, exo_type=None, exo_q=("Hoose","Inflow")):
+    exo_value = {"increase": 1, "decrease": -1}
+    #print("state1 \n", state1)
+    #print("state2 \n", state2)
+    
+    if exo_type == None:
+        if state1 == state2:
+            return True
+    elif (exo_type == "increase") | (exo_type == "decrease"):
+        #make a copy of the state
+        s_1 = deepcopy(state1)
+        
+        #increment the derivavite
+        s_1[exo_q[0]][exo_q[1]].derivative.value = DValue.add(s_1[exo_q[0]][exo_q[1]].derivative.value, exo_value[exo_type])
+        
+        #print("s_1 exo \n",s_1)
+        #aplly derivative in all quantities
+        all_poss = derivate_all_q(s_1)
+       
+        #compares all_possibilities of next states with the posssible next states.
+        for maybe_next_state in all_poss:
+            #it is slow, but it works! (and I can spare that millisecond)
+            new_s = list_to_state(maybe_next_state, state2)
+            return new_s == state2
+                    
+    elif exo_type == "random":
+        return exogenous_change(state1, state2, exo_type="decrease", exo_q=exo_q) | exogenous_change(state1, state2, exo_type="increase", exo_q=exo_q)
+        
+        
+        
+    
+    
+    
     
 def connect_states(unconnected_states):
     """create phisically possible connection between states.
-    NOT FULLU WORKING YET"""
+    NOT FULLY WORKING YET"""
     
     #add an id to each state.
     for i, s in enumerate(unconnected_states.copy()):
@@ -180,7 +231,7 @@ def connect_states(unconnected_states):
 
                 if new_s == s_2:
                     #connects states
-                    add_directional_connection(s_1, s_2, '∂') 
+                    add_directional_connection(s_1, s_2, 'der') 
         
         #external influences:
         
@@ -188,34 +239,42 @@ def connect_states(unconnected_states):
         #works because and despite some impossible states!
         #best way towards robust code is to use the rules between the quantities.
         for s_2 in unconnected_states:
+              
             
-            #open tap
-            #if the tap is closed
-            if s_1["Hoose"]["Inflow"].magnitude.value == 0:
-                if s_1["Hoose"]["Inflow"].derivative.value == 0:
-                    
-                    #if the tap is opening
-                    if s_2["Hoose"]["Inflow"].magnitude.value == 0:
-                        if s_2["Hoose"]["Inflow"].derivative.value == 1:
-                            
-                            #if the rest of the state is the same
-                            if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
-                                #connect states
-                                add_directional_connection(s_1, s_2, 'exo') 
+            if exogenous_change(s_1, s_2, exo_type="random", exo_q=("Hoose","Inflow")):
+                #connect states
+                add_directional_connection(s_1, s_2, 'exo') 
+                #print("state1 \n", s_1)
+                #print("state2 \n", s_2)
             
-            #close tap
-            #if the tap is open
-            if s_1["Hoose"]["Inflow"].magnitude.value == 1:
-                if s_1["Hoose"]["Inflow"].derivative.value == 0:
-                    
-                    #if the tap is closing
-                    if s_2["Hoose"]["Inflow"].magnitude.value == 1:
-                        if s_2["Hoose"]["Inflow"].derivative.value == -1:
-                            
-                            #if the rest of the state is the same
-                            if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
-                                #connect states
-                                add_directional_connection(s_1, s_2, 'exo') 
+             #keep legacy code for future museums about bad code:
+#            #open tap
+#            #if the tap is closed
+#            if s_1["Hoose"]["Inflow"].magnitude.value == 0:
+#                if s_1["Hoose"]["Inflow"].derivative.value == 0:
+#                    
+#                    #if the tap is opening
+#                    if s_2["Hoose"]["Inflow"].magnitude.value == 0:
+#                        if s_2["Hoose"]["Inflow"].derivative.value == 1:
+#                            
+#                            #if the rest of the state is the same
+#                            if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
+#                                #connect states
+#                                add_directional_connection(s_1, s_2, 'exo') 
+#            
+#            #close tap
+#            #if the tap is open
+#            if s_1["Hoose"]["Inflow"].magnitude.value == 1:
+#                if s_1["Hoose"]["Inflow"].derivative.value == 0:
+#                    
+#                    #if the tap is closing
+#                    if s_2["Hoose"]["Inflow"].magnitude.value == 1:
+#                        if s_2["Hoose"]["Inflow"].derivative.value == -1:
+#                            
+#                            #if the rest of the state is the same
+#                            if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
+#                                #connect states
+#                                add_directional_connection(s_1, s_2, 'exo') 
             
             
         
