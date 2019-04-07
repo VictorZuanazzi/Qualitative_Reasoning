@@ -99,19 +99,25 @@ class TestValidation(unittest.TestCase):
         state1 = {
             "A" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.MINUS)) },
             "B" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.MINUS)) },
-            "C" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.MINUS)) },
+            "C" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO)) },
         }
         state2 = {
             "A" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.MINUS)) },
             "B" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO)) },
-            "C" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.MINUS)) },
+            "C" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO)) },
         }
         state3 = {
             "A" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.MINUS)) },
             "B" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.PLUS)) },
-            "C" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.MINUS)) },
+            "C" : { "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO)) },
         }
         relations = [
+            {
+                "type" : "EX",
+                "args" : None,
+                "Q1" : ("A", "Q"),
+                "Q2" : ("A", "Q"), 
+            },
             {
                 "type" : "P+",
                 "args" : None,
@@ -132,25 +138,25 @@ class TestValidation(unittest.TestCase):
 
     def test_isStateValid_multiRelation_invalid(self):
         state = {
-            "Container" : {
-                "Volume" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO))
+            "A" : {
+                "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO))
             },
-            "Drain" : {
-                "Outflow" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO))
+            "B" : {
+                "Q" : Quantity(Magnitude(MValue.PLUS), Derivative(DValue.ZERO))
             },
         }
         relations = [
             {
                 "type" : "P+",
                 "args" : None,
-                "Q1" : ("Container", "Volume"),
-                "Q2" : ("Drain", "Outflow"),
+                "Q1" : ("A", "Q"),
+                "Q2" : ("B", "Q"),
             },
             {
                 "type" : "I-",
                 "args" : None,
-                "Q1" : ("Drain", "Outflow"),
-                "Q2" : ("Container", "Volume"),
+                "Q1" : ("B", "Q"),
+                "Q2" : ("A", "Q"),
             },
         ]
 
@@ -186,7 +192,14 @@ class TestValidation(unittest.TestCase):
         state_valid = {
             "A" : { "Q" : Quantity(Magnitude(MValue.MAX), Derivative(DValue.MINUS)) },
         }
-        relations = []
+        relations = [
+            {
+                "type" : "EX",
+                "args" : None,
+                "Q1" : ("A", "Q"),
+                "Q2" : ("A", "Q"),
+            }
+        ]
 
         self.assertEqual(isStateValid(state_invalid, relations), False)
         self.assertEqual(isStateValid(state_valid, relations), True)
@@ -198,10 +211,23 @@ class TestValidation(unittest.TestCase):
         state_valid = {
             "A" : { "Q" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.PLUS)) },
         }
-        relations = []
+        relations = [
+            {
+                "type" : "EX",
+                "args" : None,
+                "Q1" : ("A", "Q"),
+                "Q2" : ("A", "Q"),
+            }
+        ]
 
         self.assertEqual(isStateValid(state_invalid, relations), False)
         self.assertEqual(isStateValid(state_valid, relations), True)
+
+    def test_isStateValid_noEX(self):
+        state = { "A" : { "Q" : Quantity(Magnitude(MValue.ZERO), Derivative(DValue.PLUS)) } }
+        relations = []
+
+        self.assertEqual(isStateValid(state, relations), False)
 
 if __name__ == '__main__':
     unittest.main()
