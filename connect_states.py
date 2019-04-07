@@ -179,12 +179,8 @@ def connect_states(unconnected_states):
                 new_s = list_to_state(maybe_next_state, s_2)
 
                 if new_s == s_2:
-                    
-                    #get the explanation for the state
-                    explanation = diff_of_states(s_1, s_2)
-                    
                     #connects states
-                    add_directional_connection(s_1, s_2, explanation) 
+                    add_directional_connection(s_1, s_2, 'derivative') 
         
         #external influences:
         
@@ -204,12 +200,8 @@ def connect_states(unconnected_states):
                             
                             #if the rest of the state is the same
                             if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
-                                
-                                #get the explanation for the state
-                                explanation = diff_of_states(s_1, s_2)
-                                
                                 #connect states
-                                add_directional_connection(s_1, s_2, explanation) 
+                                add_directional_connection(s_1, s_2, 'exogenous') 
             
             #close tap
             #if the tap is open
@@ -222,12 +214,8 @@ def connect_states(unconnected_states):
                             
                             #if the rest of the state is the same
                             if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
-                                
-                                #get the explanation for the state
-                                explanation = diff_of_states(s_1, s_2)
-                                
                                 #connect states
-                                add_directional_connection(s_1, s_2, explanation) 
+                                add_directional_connection(s_1, s_2, 'exogenous') 
             
             
         
