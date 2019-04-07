@@ -334,5 +334,63 @@ class TestValidation(unittest.TestCase):
         ]
         self.assertEqual(isStateValid(state, relations), False)
 
+    def test_isStateValid_complexValid(self):
+        state = {
+            "A" : { "Q" : Quantity(Magnitude(0), Derivative(0)) },
+            "B" : { "Q" : Quantity(Magnitude(0), Derivative(0)) },
+            "C" : { "Q" : Quantity(Magnitude(0), Derivative(0)) },
+        }
+        relations = [
+            {
+                "type" : "EX",
+                "args" : 1,
+                "Q1" : ("A", "Q"),
+                "Q2" : ("A", "Q"),
+            },
+            {
+                "type" : "I+",
+                "args" : None,
+                "Q1" : ("A", "Q"),
+                "Q2" : ("B", "Q"),
+            },
+            {
+                "type" : "I-",
+                "args" : None,
+                "Q1" : ("C", "Q"),
+                "Q2" : ("B", "Q"),
+            },
+            {
+                "type" : "P+",
+                "args" : None,
+                "Q1" : ("B", "Q"),
+                "Q2" : ("C", "Q"),
+            },
+            {
+                "type" : "VC",
+                "args" : MValue.MAX,
+                "Q1" : ("B", "Q"),
+                "Q2" : ("C", "Q"),
+            },
+            {
+                "type" : "VC",
+                "args" : MValue.ZERO,
+                "Q1" : ("B", "Q"),
+                "Q2" : ("C", "Q"),
+            },
+            {
+                "type" : "VC",
+                "args" : MValue.MAX,
+                "Q1" : ("C", "Q"),
+                "Q2" : ("B", "Q"),
+            },
+            {
+                "type" : "VC",
+                "args" : MValue.ZERO,
+                "Q1" : ("C", "Q"),
+                "Q2" : ("B", "Q"),
+            },
+        ]
+        self.assertEqual(isStateValid(state, relations), True)
+
 if __name__ == '__main__':
     unittest.main()

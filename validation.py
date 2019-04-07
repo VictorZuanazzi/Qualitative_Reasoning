@@ -75,25 +75,25 @@ def toStates(state, possibleDerivatives):
     return stateList
 
 def applyCausalMode(state, relations):
-    # init magnitudes and possible derivatives
-    magnitudes = {}
-    possibleDerivatives = {}
-    for eKey, e in state.items():
-        for qKey, q in e.items():
-            magnitudes[(eKey, qKey)] = q.magnitude.value
-            possibleDerivatives[(eKey, qKey)] = [0]
+    states = [[] for i in range(len(relations) + 1)]
+    # Assume no exogenous influence in inital state
+    states[0] = [state_copy(state)]
+    for _, e in states[0][0].items():
+        for _, q in e.items():
+            q.derivative.value = DValue.ZERO
 
-    for rel in relations:
+    for i, rel in enumerate(relations):
         if(rel["type"] is "EX"):
-            head, tail = getRelationQuantities(state, rel)
-            possibleDerivatives[rel["Q2"]] = [tail.derivative.value]
+            _, tail = getRelationQuantities(state, rel)
+            _, s_tail = getRelationQuantities(states[i][0], rel)
+            s_tail.derivative.value = tail.derivative.value
+            states[i+1] = [state_copy(states[i][0])]
             continue
 
          # get implemetation for relation
         func = getFunc(rel["type"], rel["args"])
 
-        states = toStates(state, possibleDerivatives)
-        for s in states:
+        for s in states[i]:
             # get head and tail quantity
             head, tail = getRelationQuantities(s, rel)
             new_tail = tail.copy()
@@ -102,16 +102,20 @@ def applyCausalMode(state, relations):
             func(head, new_tail)
 
             if rel["type"] == "VC":
-                if new_tail != tail:
-                    magnitudes[rel["Q2"]] = new_tail.magnitude.value
+                new_s = state_copy(s)
+                _, new_s_tail = getRelationQuantities(new_s, rel)
+                new_s_tail.magnitude.value = new_tail.magnitude.value
+                states[i+1].append(new_s)
             else:
-                if not rel["Q2"] in possibleDerivatives:
-                    possibleDerivatives[rel["Q2"]] = [0]
+                _, s_tail = getRelationQuantities(s, rel)
+                ds = addDerivatives([new_tail.derivative.value], [s_tail.derivative.value])
+                for d in ds:
+                    new_s = state_copy(s)
+                    _, new_s_tail = getRelationQuantities(new_s, rel)
+                    new_s_tail.derivative.value = d
+                    states[i+1].append(new_s)
 
-            if not new_tail.derivative.value in possibleDerivatives[rel["Q2"]]:
-                possibleDerivatives[rel["Q2"]] = addDerivatives([new_tail.derivative.value], possibleDerivatives[rel["Q2"]])
-
-    return magnitudes, possibleDerivatives
+    return states[-1]
 
 def isStateValid(state, relations):
     isValid = True
@@ -122,28 +126,7 @@ def isStateValid(state, relations):
             isValid &= not (q.magnitude.isAtUpperBound() and q.derivative.value == DValue.PLUS)
             isValid &= not (q.magnitude.isAtLowerBound() and q.derivative.value == DValue.MINUS)
 
-    magnitudes, derivatives = checkExogenous(state, relations)
-
-    exo_state = state_copy(state)
-    for key, value in derivatives.items():
-        exo_state[key[0]][key[1]].derivative.value = value
-
-    magnitudes, possibleDerivatives = applyCausalMode(state, relations)
-
-    # check if state changed to valid option
-    for eKey, e in state.items():
-        for qKey, q in e.items():
-            key = (eKey, qKey)
-            if key in possibleDerivatives:
-                if not q.derivative.value in possibleDerivatives[key]:
-                    isValid &= False
-                    break
-            elif not q.derivative.value is derivatives[key]:
-                isValid &= False
-                break
-
-            if magnitudes[key] != q.magnitude.value:
-                isValid &= False
-                break
+    causalStates = applyCausalMode(state, relations)
+    isValid &= state in causalStates
 
     return isValid

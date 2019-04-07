@@ -9,6 +9,12 @@ from graph_maker import make_state_graph
 def main():
     relations = [
         {
+            "type" : "EX",
+            "args" : 1,
+            "Q1" : ("Hoose", "Inflow"),
+            "Q2" : ("Hoose", "Inflow"),
+        },
+        {
             "type" : "I+",
             "args" : None,
             "Q1" : ("Hoose", "Inflow"),
