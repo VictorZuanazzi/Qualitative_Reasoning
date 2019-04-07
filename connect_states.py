@@ -180,7 +180,7 @@ def connect_states(unconnected_states):
 
                 if new_s == s_2:
                     #connects states
-                    add_directional_connection(s_1, s_2, 'derivative') 
+                    add_directional_connection(s_1, s_2, '∂') 
         
         #external influences:
         
@@ -201,7 +201,7 @@ def connect_states(unconnected_states):
                             #if the rest of the state is the same
                             if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
                                 #connect states
-                                add_directional_connection(s_1, s_2, 'exogenous') 
+                                add_directional_connection(s_1, s_2, 'exo') 
             
             #close tap
             #if the tap is open
@@ -215,7 +215,7 @@ def connect_states(unconnected_states):
                             #if the rest of the state is the same
                             if compare_states_except(s_1, s_2, exc_quantity = "Inflow"):
                                 #connect states
-                                add_directional_connection(s_1, s_2, 'exogenous') 
+                                add_directional_connection(s_1, s_2, 'exo') 
             
             
         

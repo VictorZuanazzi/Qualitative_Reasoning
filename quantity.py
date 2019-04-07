@@ -19,7 +19,7 @@ class Quantity:
         return self.__str__()
 
     def __str__(self):
-        return f"[{self.magnitude.value}/{self.magnitude.upperBound},{self.derivative.value}]"
+        return f"[{self.magnitude},{self.derivative}]"
 
     @staticmethod
     def applyDerivative(orignal):
