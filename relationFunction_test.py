@@ -95,22 +95,22 @@ class TestRelationFunctions(unittest.TestCase):
     
     #EX
     def test_ex_increase_minus(self):
-        q1 = Quantity(None, DValue.MINUS)
-        q2 = Quantity(None, DValue.MINUS)
+        q1 = Quantity(None, Derivative(DValue.MINUS))
+        q2 = Quantity(None, Derivative(DValue.MINUS))
         
         r.getFunc("EX", 1)(q1, q2)
         self.assertEqual(q2.derivative.value, DValue.ZERO)
     
     def test_ex_increase_zero(self):
-        q1 = Quantity(None, DValue.ZERO)
-        q2 = Quantity(None, DValue.ZERO)
+        q1 = Quantity(None, Derivative(DValue.ZERO))
+        q2 = Quantity(None, Derivative(DValue.ZERO))
         
         r.getFunc("EX", 1)(q1, q2)
         self.assertEqual(q2.derivative.value, DValue.PLUS)
     
     def test_ex_increase_plus(self):
-        q1 = Quantity(None, DValue.PLUS)
-        q2 = Quantity(None, DValue.PLUS)
+        q1 = Quantity(None, Derivative(DValue.PLUS))
+        q2 = Quantity(None, Derivative(DValue.PLUS))
         
         r.getFunc("EX", 1)(q1, q2)
         self.assertEqual(q2.derivative.value, DValue.PLUS)
