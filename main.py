@@ -57,9 +57,25 @@ def main():
             "Q2" : ("Container", "Volume"),
         },
     ]
+    
+    mags = list(map(int, MValue))    
+    ders = list(map(int, DValue))
+    
+    blue_print = {
+            "Hoose" : {
+                "Inflow" : ([0,1], ders)
+            },
+            "Container" : {
+                "Volume" : (mags, ders),
+                "Height" : (mags, ders),
+                "Pressure" : (mags, ders),
+            },
+            "Drain" : {
+                "Outflow" : (mags, ders)
+            },
+        }
 
     states = over_generate()
-    ders = list(map(int, DValue))
     pruned_states = pruneInvalidStates(states, relations) 
     connected_states = connect_states(pruned_states, relations)
     
