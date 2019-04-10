@@ -41,6 +41,7 @@ def make_state_graph(states, name="state_graph"):
     
     #create the graph
     graph = pydot.Dot(graph_type='digraph')
+    graph.set_graph_defaults(sep=0.5, overlap=False, splines=True)
     
     #create a list with empity nodes
     node = [pydot.Node()]*len(states)
@@ -69,5 +70,5 @@ def make_state_graph(states, name="state_graph"):
     
     print("Graph nodes:",len(graph.get_node_list()), "edges:",len(graph.get_edge_list()))
     #saves the graph.
-    graph.write_png(name+'.png')
+    graph.write_png(name+'.png', prog='neato')
         

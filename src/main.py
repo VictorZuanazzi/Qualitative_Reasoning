@@ -72,7 +72,7 @@ def make_simple_graph():
 
     states = qr_engine(blue_print, relations)
     
-    make_state_graph(states, '../state_graph')
+    make_state_graph(states, 'state_graph')
 
 def make_extended_graph():
     relations = [
@@ -169,7 +169,7 @@ def make_extended_graph():
 
     states = qr_engine(blue_print, relations)
     
-    make_state_graph(states, '../state_graph_expanded')
+    make_state_graph(states, 'state_graph_expanded')
 
 def main():
     make_simple_graph()
