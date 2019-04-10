@@ -8,13 +8,13 @@ def make_simple_graph():
         {
             "type" : "EX",
             "args" : 1,
-            "Q1" : ("Hoose", "Inflow"),
-            "Q2" : ("Hoose", "Inflow"),
+            "Q1" : ("Hose", "Inflow"),
+            "Q2" : ("Hose", "Inflow"),
         },
         {
             "type" : "I+",
             "args" : None,
-            "Q1" : ("Hoose", "Inflow"),
+            "Q1" : ("Hose", "Inflow"),
             "Q2" : ("Container", "Volume"),
         },
         {
@@ -59,7 +59,7 @@ def make_simple_graph():
     ders = list(map(int, DValue))
     
     blue_print = {
-            "Hoose" : {
+            "Hose" : {
                 "Inflow" : ([0,1], ders)
             },
             "Container" : {
@@ -79,13 +79,13 @@ def make_extended_graph():
         {
             "type" : "EX",
             "args" : 1,
-            "Q1" : ("Hoose", "Inflow"),
-            "Q2" : ("Hoose", "Inflow"),
+            "Q1" : ("Hose", "Inflow"),
+            "Q2" : ("Hose", "Inflow"),
         },
         {
             "type" : "I+",
             "args" : None,
-            "Q1" : ("Hoose", "Inflow"),
+            "Q1" : ("Hose", "Inflow"),
             "Q2" : ("Container", "Volume"),
         },
         {
@@ -154,7 +154,7 @@ def make_extended_graph():
     ders = list(map(int, DValue))
     
     blue_print = {
-            "Hoose" : {
+            "Hose" : {
                 "Inflow" : ([0,1], ders)
             },
             "Container" : {
