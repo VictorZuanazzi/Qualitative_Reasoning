@@ -2,7 +2,7 @@ from quantity import Quantity
 from magnitude import Magnitude, MValue
 from derivative import Derivative, DValue
 from overgeneration import over_generate
-from validation import isStateValid
+from validation import isStateValid, pruneInvalidStates
 from connect_states import connect_states
 from graph_maker import make_state_graph
 
@@ -57,9 +57,26 @@ def main():
             "Q2" : ("Container", "Volume"),
         },
     ]
+    
+    mags = list(map(int, MValue))    
+    ders = list(map(int, DValue))
+    
+    blue_print = {
+            "Hoose" : {
+                "Inflow" : ([0,1], ders)
+            },
+            "Container" : {
+                "Volume" : (mags, ders),
+                "Height" : (mags, ders),
+                "Pressure" : (mags, ders),
+            },
+            "Drain" : {
+                "Outflow" : (mags, ders)
+            },
+        }
 
     states = over_generate()
-    pruned_states = [s for s in states if isStateValid(s, relations)]
+    pruned_states = pruneInvalidStates(states, relations) 
     connected_states = connect_states(pruned_states, relations)
     
     #print("\n".join([str(s) for s in states]))
