@@ -59,6 +59,14 @@ def eq(s1, s2):
             result &= s2[eKey][qKey] == q
     return result
 
+def isContinues(s1, s2):
+    result = True
+    for eKey, e in s1.items():
+        for qKey, q in e.items():
+            result &= abs(s2[eKey][qKey].magnitude.value - q.magnitude.value) <= 1
+            result &= abs(s2[eKey][qKey].derivative.value - q.derivative.value) <= 1
+    return result
+
 def compare_states_except(state_1, state_2, exc_quantity = "Inflow"):
     """compare if the quantities of the states are the same except for the
     given quantity. Non-quantities are ignored.
@@ -134,8 +142,7 @@ def diff_of_states(state1, state2):
 
     
 def connect_states(unconnected_states, relations):
-    """create phisically possible connection between states.
-    NOT FULLU WORKING YET"""
+    """create possible connection between states."""
     
     #add an id to each state.
     for i, s in enumerate(unconnected_states.copy()):
@@ -164,18 +171,18 @@ def connect_states(unconnected_states, relations):
         all_poss = list(product(*quantities))
         
         #compares all_possibilities of next states with the posssible next states.
-        
 
         for maybe_next_state in all_poss:
             s = list_to_state(maybe_next_state, s_1)
             causalStates = applyCausalMode(s,relations)
             for cs in causalStates:
-                for s_2 in unconnected_states:
-                    
-                    #it is slow, but it works! (and I can spare that millisecond)
-                    if eq(cs, s_2):
-                        #connects states
-                        add_directional_connection(s_1, s_2, '∂') 
+                if isContinues(cs, s_1):
+                    for s_2 in unconnected_states:
+                        
+                        #it is slow, but it works! (and I can spare that millisecond)
+                        if eq(cs, s_2):
+                            #connects states
+                            add_directional_connection(s_1, s_2, '∂') 
             
         #external influences:
         
@@ -212,25 +219,4 @@ def connect_states(unconnected_states, relations):
                                 #connect states
                                 add_directional_connection(s_1, s_2, 'exo') 
 
-    # add_directional_connection(unconnected_states[3], unconnected_states[12],"hand")
-    # add_directional_connection(unconnected_states[4], unconnected_states[15],"hand")
-    # add_directional_connection(unconnected_states[4], unconnected_states[13],"hand")
-    # add_directional_connection(unconnected_states[4], unconnected_states[14],"hand")
-    # add_directional_connection(unconnected_states[5], unconnected_states[16],"hand")
-    # add_directional_connection(unconnected_states[5], unconnected_states[17],"hand")
-    # add_directional_connection(unconnected_states[11], unconnected_states[2],"hand")
-    # add_directional_connection(unconnected_states[8], unconnected_states[1],"hand")
     return unconnected_states
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
